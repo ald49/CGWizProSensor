@@ -1,20 +1,20 @@
 #include <Arduino.h>
 
 #include <scale.h>
-#include <tcpclient.h>
+#include <netMeshClient.h>
 
 
 void setup()
 {
   Serial.begin(115200);
   InitScale();
-  initTcpClient();
+setupNetMeshClient();
   
 }
 
 void loop()
 {
   
- updateTcpClient();
+ loopNetMeshClient();
   
 }
