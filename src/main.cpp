@@ -3,6 +3,11 @@
 #include <scale.h>
 #include <Wireless.h>
 
+int commandDelay = 1000;
+int commandDelayNr = 0;
+
+int putDataDelay = 100;
+int putDataDelayNr = 0;
 
 void setup()
 {
@@ -10,13 +15,34 @@ void setup()
   delay(1000);
   createwifi();
   InitScale();
-  webClientInit();
-
-  
+  // webClientInit();
 }
 
 void loop()
 {
   updateScale();
-   postdata();
+  
+
+if(putDataDelay=putDataDelayNr)
+  {
+    putData();
+    putDataDelayNr=0;
+  }
+  else
+  {
+    putDataDelayNr+=1;
+  }
+
+
+  if(commandDelay=commandDelayNr)
+  {
+    getCommand();
+    commandDelayNr=0;
+  }
+  else
+  {
+    commandDelayNr+=1;
+  }
+  vTaskDelay(pdMS_TO_TICKS(5));
+  
 }

@@ -13,45 +13,141 @@ unsigned long lastTime = 0;
 // Set timer to 5 seconds (5000)
 unsigned long timerDelay = 5000;
 
-void webClientInit()
+void putData()
 {
-PATH_NAME = "/getmodels";
-    String serverPath = HOST_NAME + PATH_NAME;
-    httpclient.begin(serverPath.c_str());
-
-    // Send HTTP GET request
-    int httpResponseCode = httpclient.GET();
-
-    if (httpResponseCode > 0)
+    // webClientInit();
+    if (WiFi.status() == WL_CONNECTED)
     {
-        Serial.print("HTTP Response code: ");
-        Serial.println(httpResponseCode);
-        String payload = httpclient.getString();
-        Serial.println(payload);
+        PATH_NAME = "/putdata";
+        String serverPath = HOST_NAME + PATH_NAME;
+        httpclient.begin(serverPath.c_str());
+        JsonDocument doc;
+        doc["Unit"] = ESP.getEfuseMac();
+        doc["loadvalue"] = LoadValue;
+        String json;
+        serializeJson(doc, json);
+
+        httpclient.addHeader("Content-Type", "application/json");
+        // Send HTTP GET request
+        int httpResponseCode = httpclient.PUT(json);
+
+        // if (httpResponseCode > 0)
+        //{
+        //     Serial.print("HTTP Response code: ");
+        //     Serial.println(httpResponseCode);
+        //     String payload = httpclient.getString();
+        //     Serial.println(payload);
+        // }
+        // else
+        //{
+        //     Serial.print("Error code: ");
+        //     Serial.println(httpResponseCode);
+        // }
+        //  Free resources
+        httpclient.end();
     }
     else
     {
-        Serial.print("Error code: ");
-        Serial.println(httpResponseCode);
+        createwifi();
     }
-    // Free resources
-    httpclient.end();
+}
+
+void getCommand()
+{
+    // webClientInit();
+    if (WiFi.status() == WL_CONNECTED)
+    {
+        PATH_NAME = "/getcommand";
+        String serverPath = HOST_NAME + PATH_NAME;
+        httpclient.begin(serverPath.c_str());
+        JsonDocument doc;
+        doc["Unit"] = ESP.getEfuseMac();
+        String json;
+        serializeJson(doc, json);
+
+        httpclient.addHeader("Content-Type", "application/json");
+        // Send HTTP GET request
+        int httpResponseCode = httpclient.POST(json);
+
+        if (httpResponseCode > 0)
+        {
+            // Serial.print("HTTP Response code: ");
+            // Serial.println(httpResponseCode);
+            String payload = httpclient.getString();
+            if (payload != "null")
+            {
+                Serial.println(payload);
+                JsonDocument localdoc;
+                localdoc = convertToJsonObj(payload);
+                commandDistruder(localdoc);
+            }
+        }
+        else
+        {
+            Serial.print("Error code: ");
+            Serial.println(httpResponseCode);
+        }
+        //  Free resources
+        httpclient.end();
+    }
+    else
+    {
+        createwifi();
+    }
+}
+
+void putMsg()
+{
+    // webClientInit();
+    if (WiFi.status() == WL_CONNECTED)
+    {
+        PATH_NAME = "/putmsg";
+        String serverPath = HOST_NAME + PATH_NAME;
+        httpclient.begin(serverPath.c_str());
+        JsonDocument doc;
+        doc["Unit"] = ESP.getEfuseMac();
+        doc["loadvalue"] = LoadValue;
+        String json;
+        serializeJson(doc, json);
+
+        httpclient.addHeader("Content-Type", "application/json");
+        // Send HTTP GET request
+        int httpResponseCode = httpclient.PUT(json);
+
+        // if (httpResponseCode > 0)
+        //{
+        //     Serial.print("HTTP Response code: ");
+        //     Serial.println(httpResponseCode);
+        //     String payload = httpclient.getString();
+        //     Serial.println(payload);
+        // }
+        // else
+        //{
+        //     Serial.print("Error code: ");
+        //     Serial.println(httpResponseCode);
+        // }
+        //  Free resources
+        httpclient.end();
+    }
+    else
+    {
+        createwifi();
+    }
 }
 
 void postdata()
 {
-    webClientInit();
+    // webClientInit();
     if (WiFi.status() == WL_CONNECTED)
     {
         PATH_NAME = "/addmodel";
         String serverPath = HOST_NAME + PATH_NAME;
         httpclient.begin(serverPath.c_str());
         JsonDocument doc;
-        doc["Unit"] =  ESP.getEfuseMac();
+        doc["Unit"] = ESP.getEfuseMac();
         doc["loadvalue"] = LoadValue;
         String json;
-        serializeJson(doc,json);
-
+        serializeJson(doc, json);
 
         httpclient.addHeader("Content-Type", "application/json");
         // Send HTTP GET request

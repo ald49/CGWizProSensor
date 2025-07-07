@@ -4,7 +4,10 @@
 #include <Wireless.h>
 #include <HTTPClient.h>
 #include <scale.h>
+#include <WebHelper.h>
+#include <CommandExec.h>
 
-void webClientInit();
-
+//void webClientInit();
+void putData();
 void postdata();
+void getCommand();
