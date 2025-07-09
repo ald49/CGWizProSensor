@@ -4,45 +4,37 @@
 #include <Wireless.h>
 
 int commandDelay = 1000;
-int commandDelayNr = 0;
+int commandNext = 0;
 
-int putDataDelay = 100;
-int putDataDelayNr = 0;
+int putDataDelay = 300;
+int putDataNext = 0;
 
 void setup()
 {
   Serial.begin(115200);
   delay(1000);
+  Serial.println(ESP.getEfuseMac());
   createwifi();
   InitScale();
-  // webClientInit();
+  commandNext = millis() + commandDelay;
+  putDataNext = millis() + putDataDelay;
 }
 
 void loop()
 {
   updateScale();
-  
+  int now = millis();
 
-if(putDataDelay=putDataDelayNr)
+  if (now >= putDataNext)
   {
     putData();
-    putDataDelayNr=0;
-  }
-  else
-  {
-    putDataDelayNr+=1;
+    putDataNext = millis() + putDataDelay;
   }
 
-
-  if(commandDelay=commandDelayNr)
+  if (now >= commandNext)
   {
     getCommand();
-    commandDelayNr=0;
+    commandNext = millis() + commandDelay;
+    ;
   }
-  else
-  {
-    commandDelayNr+=1;
-  }
-  vTaskDelay(pdMS_TO_TICKS(5));
-  
 }

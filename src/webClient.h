@@ -11,3 +11,4 @@
 void putData();
 void postdata();
 void getCommand();
+void putMsg(String msg);

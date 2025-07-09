@@ -96,7 +96,7 @@ void getCommand()
     }
 }
 
-void putMsg()
+void putMsg(String msg)
 {
     // webClientInit();
     if (WiFi.status() == WL_CONNECTED)
@@ -105,8 +105,7 @@ void putMsg()
         String serverPath = HOST_NAME + PATH_NAME;
         httpclient.begin(serverPath.c_str());
         JsonDocument doc;
-        doc["Unit"] = ESP.getEfuseMac();
-        doc["loadvalue"] = LoadValue;
+        doc["msg"] = msg;
         String json;
         serializeJson(doc, json);
 

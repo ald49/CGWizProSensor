@@ -2,6 +2,8 @@
 #include <Arduino.h>
 #include <HX711_ADC.h>
 #include <ArduinoJson.h>
+#include <webClient.h>
+#include <saveMem.h>
 
 const int HX711_dout = 0;
 const int HX711_sck = 1;

@@ -64,11 +64,11 @@ void updateScale()
     {
         if (millis() > t + serialPrintInterval)
         {
-            //Serial.print("Load_cell output val: ");
-            //Serial.println(i);
+            // Serial.print("Load_cell output val: ");
+            // Serial.println(i);
             newDataReady = 0;
             t = millis();
-            LoadValue=LoadCell.getData();
+            LoadValue = LoadCell.getData();
         }
     }
 
@@ -83,6 +83,7 @@ void updateScale()
     // check if last tare operation is complete:
     if (LoadCell.getTareStatus() == true)
     {
+        putMsg("Tare complete");
         Serial.println("Tare complete");
     }
 
@@ -106,7 +107,7 @@ boolean setscaletar()
 {
     Serial.println("Start Tare");
     // addMassage("Starting Tare");
-
+    putMsg("Starting Tare");
     LoadCell.tareNoDelay();
 
     return true;
@@ -116,7 +117,7 @@ boolean setscaletar(int id)
 {
     Serial.println("Start Tare LoadCell " + String(id));
     // addMassage("Starting Tare");
-
+    putMsg("Starting Tare");
     LoadCell.tareNoDelay();
 
     return true;
@@ -143,12 +144,8 @@ JsonDocument getscaledata()
 boolean setCalibrationscalet(int id, JsonDocument jsono)
 {
 
-    float knownmass = jsono["knownmass"];
-    // float knownmass = 139.30;
-    // addMassage("Starting calibration");
-
-    // check for new data/start next conversion:
-
+    float knownmass = jsono["Value"];
+    Serial.println(knownmass);
     if (LoadCell.update())
     {
         LoadValue = LoadCell.getData();
@@ -156,7 +153,8 @@ boolean setCalibrationscalet(int id, JsonDocument jsono)
 
     LoadCell.getNewCalibration(knownmass);
     LoadCellcalibrationValue = LoadCell.getCalFactor();
-
-    // saveDataScale();
+    Serial.println(LoadCellcalibrationValue);
+    putMsg("Calibration Done");
+    saveDataScale();
     return true;
 }
